@@ -875,13 +875,14 @@ int32_t iis2dulpx_outt_data_get(const stmdev_ctx_t *ctx,
 int32_t iis2dulpx_ah_qvar_data_get(const stmdev_ctx_t *ctx,
                                    iis2dulpx_ah_qvar_data_t *data)
 {
-  uint8_t buff[2];
+  uint8_t buff[3];
   int32_t ret;
 
-  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_OUT_T_AH_QVAR_L, buff, 2);
+  /* Read and discard also OUT_Z_H reg to clear drdy */
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_OUT_T_AH_QVAR_L - 1, buff, 3);
 
-  data->raw = (int16_t)buff[1U];
-  data->raw = (data->raw * 256) + (int16_t) buff[0];
+  data->raw = (int16_t)buff[2U];
+  data->raw = (data->raw * 256) + (int16_t) buff[1U];
 
   data->mv = iis2dulpx_from_lsb_to_mv(data->raw);
   return ret;
