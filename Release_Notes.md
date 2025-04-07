@@ -30,7 +30,7 @@ This directory contains the IIS2DULPX component drivers.
 # Update history
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section1" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section1" aria-hidden="true">
 <label for="collapse-section1" aria-hidden="true">V1.0.0 / 12-Feb-2025</label>
 <div>
 
@@ -41,6 +41,17 @@ This directory contains the IIS2DULPX component drivers.
 - First official release [ref. DS v1.0]
 
 ##
+
+</div>
+
+<input type="checkbox" id="collapse-section2" checked aria-hidden="true">
+<label for="collapse-section2" aria-hidden="true">V1.0.1 / 07-Apr-2025</label>
+<div>
+
+## Main changes
+
+- fix drdy event clearing
+- fix RESET case in init_set()
 
 </div>
 :::
