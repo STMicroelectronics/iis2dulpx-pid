@@ -2034,11 +2034,8 @@ int32_t iis2dulpx_fifo_mode_set(const stmdev_ctx_t *ctx, iis2dulpx_fifo_mode_t v
     fifo_wtm.xl_only_fifo = val.xl_only;
 
     /* set batching info */
-    if (val.batch.dec_ts != IIS2DULPX_DEC_TS_OFF)
-    {
-      fifo_batch.dec_ts_batch = (uint8_t)val.batch.dec_ts;
-      fifo_batch.bdr_xl = (uint8_t)val.batch.bdr_xl;
-    }
+    fifo_batch.dec_ts_batch = (uint8_t)val.batch.dec_ts;
+    fifo_batch.bdr_xl = (uint8_t)val.batch.bdr_xl;
 
     fifo_ctrl.cfg_chg_en = val.cfg_change_in_fifo;
 
