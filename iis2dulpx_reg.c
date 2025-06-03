@@ -3397,9 +3397,6 @@ int32_t iis2dulpx_emb_fsm_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
                              (uint8_t *)&emb_func_en_b, 1);
 
     *val = emb_func_en_b.fsm_en;
-
-    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B,
-                               (uint8_t *)&emb_func_en_b, 1);
   }
 
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
