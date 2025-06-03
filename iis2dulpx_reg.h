@@ -2639,10 +2639,10 @@ typedef enum
 
 typedef enum
 {
-  IIS2DULPX_ODR_NO_CHANGE       = 0,  /* no odr change during inactivity state */
-  IIS2DULPX_ODR_1_6_HZ          = 1,  /* set odr to 1.6Hz during inactivity state */
-  IIS2DULPX_ODR_3_HZ            = 1,  /* set odr to 3Hz during inactivity state */
-  IIS2DULPX_ODR_25_HZ           = 1,  /* set odr to 25Hz during inactivity state */
+  IIS2DULPX_ODR_NO_CHANGE       = 0x0,  /* no odr change during inactivity state */
+  IIS2DULPX_ODR_1_6_HZ          = 0x1,  /* set odr to 1.6Hz during inactivity state */
+  IIS2DULPX_ODR_3_HZ            = 0x2,  /* set odr to 3Hz during inactivity state */
+  IIS2DULPX_ODR_25_HZ           = 0x3,  /* set odr to 25Hz during inactivity state */
 } iis2dulpx_inact_odr_t;
 
 typedef struct
