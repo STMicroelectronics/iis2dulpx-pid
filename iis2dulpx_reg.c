@@ -295,12 +295,10 @@ int32_t iis2dulpx_status_get(const stmdev_ctx_t *ctx, iis2dulpx_status_t *val)
   */
 int32_t iis2dulpx_embedded_status_get(const stmdev_ctx_t *ctx, iis2dulpx_embedded_status_t *val)
 {
-  iis2dulpx_emb_func_status_t status;
+  iis2dulpx_emb_func_status_mainpage_t status;
   int32_t ret;
 
-  ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_STATUS, (uint8_t *)&status, 1);
-  ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_STATUS_MAINPAGE, (uint8_t *)&status, 1);
 
   val->is_step_det = status.is_step_det;
   val->is_tilt = status.is_tilt;
