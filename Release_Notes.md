@@ -57,7 +57,7 @@ This directory contains the IIS2DULPX component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section3" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section3" aria-hidden="true">
 <label for="collapse-section3" aria-hidden="true">V1.0.2 / 16-Apr-2025</label>
 <div>
 
@@ -68,7 +68,24 @@ This directory contains the IIS2DULPX component drivers.
 ##
 
 </div>
+
+<input type="checkbox" id="collapse-section4" checked aria-hidden="true">
+<label for="collapse-section4" aria-hidden="true">V1.1.0 / 07-Jul-2025</label>
+<div>
+
+## Main changes
+
+- Fix driver formatting options
+- Added pointer to private data in stmdev_ctx_t
+- Remove unused status parameter
+- Removed useless reg write in emb_fsm_en_get
+- Fix inact_odr_t enum variants
+
+##
+
+</div>
 :::
+
 
 
 
