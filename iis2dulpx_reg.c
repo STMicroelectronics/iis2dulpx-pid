@@ -1729,8 +1729,8 @@ int32_t iis2dulpx_pin_int2_route_get(const stmdev_ctx_t *ctx, iis2dulpx_pin_int_
   iis2dulpx_md2_cfg_t md2_cfg;
   int32_t ret;
 
-  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL2, (uint8_t *)&ctrl3, 1);
-  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_MD1_CFG, (uint8_t *)&md2_cfg, 1);
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL3, (uint8_t *)&ctrl3, 1);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_MD2_CFG, (uint8_t *)&md2_cfg, 1);
 
   if (ret == 0)
   {
