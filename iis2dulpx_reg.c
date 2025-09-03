@@ -2003,12 +2003,10 @@ int32_t iis2dulpx_fifo_mode_set(const stmdev_ctx_t *ctx, iis2dulpx_fifo_mode_t v
   iis2dulpx_ctrl4_t ctrl4;
   iis2dulpx_fifo_ctrl_t fifo_ctrl;
   iis2dulpx_fifo_wtm_t fifo_wtm;
-  iis2dulpx_fifo_batch_dec_t fifo_batch;
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL4, (uint8_t *)&ctrl4, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
-  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_BATCH_DEC, (uint8_t *)&fifo_batch, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
 
   if (ret == 0)
@@ -2030,23 +2028,11 @@ int32_t iis2dulpx_fifo_mode_set(const stmdev_ctx_t *ctx, iis2dulpx_fifo_mode_t v
     /* Set xl_only_fifo */
     fifo_wtm.xl_only_fifo = val.xl_only;
 
-    /* set batching info */
-    fifo_batch.dec_ts_batch = (uint8_t)val.batch.dec_ts;
-    fifo_batch.bdr_xl = (uint8_t)val.batch.bdr_xl;
-
     fifo_ctrl.cfg_chg_en = val.cfg_change_in_fifo;
 
-    /* set watermark */
-    if (val.watermark > 0U)
-    {
-      fifo_ctrl.stop_on_fth = (val.fifo_event == IIS2DULPX_FIFO_EV_WTM) ? 1 : 0;
-      fifo_wtm.fth = val.watermark;
-    }
-
-    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_BATCH_DEC, (uint8_t *)&fifo_batch, 1);
-    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
-    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_CTRL4, (uint8_t *)&ctrl4, 1);
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   }
 
   return ret;
@@ -2065,12 +2051,10 @@ int32_t iis2dulpx_fifo_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_fifo_mode_t *
   iis2dulpx_ctrl4_t ctrl4;
   iis2dulpx_fifo_ctrl_t fifo_ctrl;
   iis2dulpx_fifo_wtm_t fifo_wtm;
-  iis2dulpx_fifo_batch_dec_t fifo_batch;
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL4, (uint8_t *)&ctrl4, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
-  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_BATCH_DEC, (uint8_t *)&fifo_batch, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
 
   if (ret == 0)
@@ -2092,12 +2076,155 @@ int32_t iis2dulpx_fifo_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_fifo_mode_t *
     /* Get xl_only_fifo */
     val->xl_only = fifo_wtm.xl_only_fifo;
 
-    /* get batching info */
-    val->batch.dec_ts = (iis2dulpx_dec_ts_t)fifo_batch.dec_ts_batch;
-    val->batch.bdr_xl = (iis2dulpx_bdr_xl_t)fifo_batch.bdr_xl;
+  }
 
-    /* get watermark */
-    val->watermark = fifo_wtm.fth;
+  return ret;
+}
+
+/**
+  * @brief  FIFO watermark threshold.[set]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  val      FIFO watermark threshold, maximum value is 127.
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t iis2dulpx_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
+{
+  iis2dulpx_fifo_wtm_t fifo_wtm;
+  int32_t ret;
+
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
+
+  if (ret == 0)
+  {
+    fifo_wtm.fth = val;
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  FIFO watermark threshold.[get]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  val      FIFO watermark threshold, maximum value is 127.
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t iis2dulpx_fifo_watermark_get(const stmdev_ctx_t *ctx, uint8_t *val)
+{
+  iis2dulpx_fifo_wtm_t fifo_wtm;
+  int32_t ret;
+
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
+
+  if (ret == 0)
+  {
+    *val = fifo_wtm.fth;
+  }
+
+  return ret;
+}
+
+
+/**
+  * @brief  FIFO batch.[set]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  val      Select value for bdr_xl: BDR_XL_ODR, BDR_XL_ODR_DIV_2, BDR_XL_ODR_DIV_4, BDR_XL_ODR_DIV_8,
+  *   BDR_XL_ODR_DIV_16, BDR_XL_ODR_DIV_32, BDR_XL_ODR_DIV_64, BDR_XL_ODR_OFF;
+  *   and dec_ts: DEC_TS_OFF, DEC_TS_1, DEC_TS_8, DEC_TS_32
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t iis2dulpx_fifo_batch_set(const stmdev_ctx_t *ctx, iis2dulpx_fifo_batch_t val)
+{
+  iis2dulpx_fifo_batch_dec_t fifo_batch;
+  int32_t ret;
+
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_BATCH_DEC, (uint8_t *)&fifo_batch, 1);
+
+  if (ret == 0)
+  {
+    fifo_batch.dec_ts_batch = (uint8_t)val.dec_ts;
+    fifo_batch.bdr_xl = (uint8_t)val.bdr_xl;
+
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_BATCH_DEC, (uint8_t *)&fifo_batch, 1);
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  FIFO batch.[get]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  val      Select value for bdr_xl: BDR_XL_ODR, BDR_XL_ODR_DIV_2, BDR_XL_ODR_DIV_4, BDR_XL_ODR_DIV_8,
+  *   BDR_XL_ODR_DIV_16, BDR_XL_ODR_DIV_32, BDR_XL_ODR_DIV_64, BDR_XL_ODR_OFF;
+  *   and dec_ts: DEC_TS_OFF, DEC_TS_1, DEC_TS_8, DEC_TS_32
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t iis2dulpx_fifo_batch_get(const stmdev_ctx_t *ctx, iis2dulpx_fifo_batch_t *val)
+{
+  iis2dulpx_fifo_batch_dec_t fifo_batch;
+  int32_t ret;
+
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_BATCH_DEC, (uint8_t *)&fifo_batch, 1);
+
+  if (ret == 0)
+  {
+    val->dec_ts = fifo_batch.dec_ts_batch;
+    val->bdr_xl = fifo_batch.bdr_xl;
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  FIFO stop on wtm.[set]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  val      Enable/Disable stop on wtm functionality.
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t iis2dulpx_fifo_stop_on_wtm_set(const stmdev_ctx_t *ctx, iis2dulpx_fifo_event_t val)
+{
+  iis2dulpx_fifo_ctrl_t fifo_ctrl;
+  int32_t ret;
+
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+
+  if (ret == 0)
+  {
+    fifo_ctrl.stop_on_fth = (val == IIS2DULPX_FIFO_EV_WTM) ? 1 : 0;
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  FIFO stop on wtm.[get]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  val      Enable/Disable stop on wtm functionality.
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t iis2dulpx_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, iis2dulpx_fifo_event_t *val)
+{
+  iis2dulpx_fifo_ctrl_t fifo_ctrl;
+  int32_t ret;
+
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+
+  if (ret == 0)
+  {
+    *val = (fifo_ctrl.stop_on_fth == 1) ? IIS2DULPX_FIFO_EV_WTM : IIS2DULPX_FIFO_EV_FULL;
   }
 
   return ret;

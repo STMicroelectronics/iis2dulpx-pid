@@ -2432,17 +2432,25 @@ typedef struct
   iis2dulpx_operation_t operation;
   iis2dulpx_store_t store;
   uint8_t xl_only                      : 1; /* only XL samples (16-bit) are stored in FIFO */
-  uint8_t watermark                    : 7; /* (0 disable) max 127 @16bit, even and max 256 @8bit.*/
   uint8_t cfg_change_in_fifo           : 1;
-  iis2dulpx_fifo_event_t fifo_event      : 1; /* 0: FIFO watermark, 1: FIFO full */
-  struct
-  {
-    iis2dulpx_dec_ts_t dec_ts; /* decimation for timestamp batching*/
-    iis2dulpx_bdr_xl_t bdr_xl; /* accelerometer batch data rate*/
-  } batch;
 } iis2dulpx_fifo_mode_t;
 int32_t iis2dulpx_fifo_mode_set(const stmdev_ctx_t *ctx, iis2dulpx_fifo_mode_t val);
 int32_t iis2dulpx_fifo_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_fifo_mode_t *val);
+
+int32_t iis2dulpx_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val);
+int32_t iis2dulpx_fifo_watermark_get(const stmdev_ctx_t *ctx, uint8_t *val);
+
+typedef struct
+{
+  iis2dulpx_dec_ts_t dec_ts; /* decimation for timestamp batching*/
+  iis2dulpx_bdr_xl_t bdr_xl; /* accelerometer batch data rate*/
+} iis2dulpx_fifo_batch_t;
+
+int32_t iis2dulpx_fifo_batch_set(const stmdev_ctx_t *ctx, iis2dulpx_fifo_batch_t val);
+int32_t iis2dulpx_fifo_batch_get(const stmdev_ctx_t *ctx, iis2dulpx_fifo_batch_t *val);
+
+int32_t iis2dulpx_fifo_stop_on_wtm_set(const stmdev_ctx_t *ctx, iis2dulpx_fifo_event_t val);
+int32_t iis2dulpx_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, iis2dulpx_fifo_event_t *val);
 
 int32_t iis2dulpx_fifo_data_level_get(const stmdev_ctx_t *ctx, uint16_t *val);
 int32_t iis2dulpx_fifo_wtm_flag_get(const stmdev_ctx_t *ctx, uint8_t *val);
