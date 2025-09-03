@@ -2444,17 +2444,20 @@ int32_t iis2dulpx_stpcnt_mode_set(const stmdev_ctx_t *ctx, iis2dulpx_stpcnt_mode
 int32_t iis2dulpx_stpcnt_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_stpcnt_mode_t *val)
 {
   iis2dulpx_emb_func_en_a_t emb_func_en_a;
+  iis2dulpx_emb_func_fifo_en_t emb_func_fifo_en;
   iis2dulpx_pedo_cmd_reg_t pedo_cmd_reg;
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&emb_func_fifo_en, 1);
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
 
   ret += iis2dulpx_ln_pg_read(ctx, IIS2DULPX_EMB_ADV_PG_0 + IIS2DULPX_PEDO_CMD_REG,
                               (uint8_t *)&pedo_cmd_reg, 1);
   val->false_step_rej = pedo_cmd_reg.fp_rejection_en;
   val->step_counter_enable = emb_func_en_a.pedo_en;
+  val->step_counter_in_fifo = emb_func_fifo_en.step_counter_fifo_en;
 
   return ret;
 }
