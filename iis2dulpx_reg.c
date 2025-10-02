@@ -165,6 +165,10 @@ int32_t iis2dulpx_init_set(const stmdev_ctx_t *ctx, iis2dulpx_init_t val)
 
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL1, (uint8_t *)&ctrl1, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL4, (uint8_t *)&ctrl4, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
   switch (val)
   {
     case IIS2DULPX_BOOT:
@@ -277,9 +281,12 @@ int32_t iis2dulpx_status_get(const stmdev_ctx_t *ctx, iis2dulpx_status_t *val)
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL1, (uint8_t *)&ctrl1, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL4, (uint8_t *)&ctrl4, 1);
 
-  val->sw_reset = ctrl1.sw_reset;
-  val->boot     = ctrl4.boot;
-  val->drdy     = status_register.drdy;
+  if (ret == 0)
+  {
+    val->sw_reset = ctrl1.sw_reset;
+    val->boot     = ctrl4.boot;
+    val->drdy     = status_register.drdy;
+  }
 
   return ret;
 }
@@ -299,9 +306,12 @@ int32_t iis2dulpx_embedded_status_get(const stmdev_ctx_t *ctx, iis2dulpx_embedde
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_STATUS_MAINPAGE, (uint8_t *)&status, 1);
 
-  val->is_step_det = status.is_step_det;
-  val->is_tilt = status.is_tilt;
-  val->is_sigmot = status.is_sigmot;
+  if (ret == 0)
+  {
+    val->is_step_det = status.is_step_det;
+    val->is_tilt = status.is_tilt;
+    val->is_sigmot = status.is_sigmot;
+  }
 
   return ret;
 }
@@ -345,6 +355,11 @@ int32_t iis2dulpx_data_ready_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_data_re
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL1, (uint8_t *)&ctrl1, 1);
 
+  if (ret != 0)
+  {
+    return ret;
+  }
+
   switch ((ctrl1.drdy_pulsed))
   {
     case 0x0:
@@ -377,6 +392,10 @@ int32_t iis2dulpx_mode_set(const stmdev_ctx_t *ctx, const iis2dulpx_md_t *val)
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL5, (uint8_t *)&ctrl5, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   ctrl5.odr = (uint8_t)val->odr & 0xFU;
   ctrl5.fs = (uint8_t)val->fs;
@@ -466,11 +485,6 @@ int32_t iis2dulpx_mode_set(const stmdev_ctx_t *ctx, const iis2dulpx_md_t *val)
       break;
   }
 
-  if (ret != 0)
-  {
-    return ret;
-  }
-
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL3, (uint8_t *)&ctrl3, 1);
 
   ctrl3.hp_en = (((uint8_t)val->odr & 0x30U) == 0x10U) ? 1U : 0U;
@@ -500,6 +514,11 @@ int32_t iis2dulpx_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_md_t *val)
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL5, (uint8_t *)&ctrl5, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL3, (uint8_t *)&ctrl3, 1);
+
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch (ctrl5.odr)
   {
@@ -629,7 +648,10 @@ int32_t iis2dulpx_t_ah_qvar_dis_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_SELF_TEST, (uint8_t *)&temp, 1);
-  *val = temp.t_ah_qvar_dis;
+  if (ret == 0)
+  {
+    *val = temp.t_ah_qvar_dis;
+  }
 
   return ret;
 }
@@ -696,7 +718,10 @@ int32_t iis2dulpx_disable_hard_reset_from_cs_set(const stmdev_ctx_t *ctx, uint8_
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   fifo_ctrl.dis_hard_rst_cs = (val == 1) ? PROPERTY_ENABLE : PROPERTY_DISABLE;
-  ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+  if (ret == 0)
+  {
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+  }
 
   return ret;
 }
@@ -714,7 +739,10 @@ int32_t iis2dulpx_disable_hard_reset_from_cs_get(const stmdev_ctx_t *ctx, uint8_
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
-  *val = fifo_ctrl.dis_hard_rst_cs;
+  if (ret == 0)
+  {
+    *val = fifo_ctrl.dis_hard_rst_cs;
+  }
 
   return ret;
 }
@@ -762,6 +790,11 @@ int32_t iis2dulpx_all_sources_get(const stmdev_ctx_t *ctx, iis2dulpx_all_sources
     ret += iis2dulpx_read_reg(ctx, IIS2DULPX_WAKE_UP_SRC, (uint8_t *)&wu_src, 1);
     ret += iis2dulpx_read_reg(ctx, IIS2DULPX_TAP_SRC, (uint8_t *)&tap_src, 1);
 
+    if (ret != 0)
+    {
+      return ret;
+    }
+
     val->six_d    = sixd_src.d6d_ia;
     val->six_d_xl = sixd_src.xl;
     val->six_d_xh = sixd_src.xh;
@@ -804,6 +837,11 @@ int32_t iis2dulpx_xl_data_get(const stmdev_ctx_t *ctx, const iis2dulpx_md_t *md,
   uint8_t j;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_OUT_X_L, buff, 6);
+
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   /* acceleration conversion */
   j = 0U;
@@ -852,6 +890,11 @@ int32_t iis2dulpx_outt_data_get(const stmdev_ctx_t *ctx,
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_OUT_T_AH_QVAR_L, buff, 2);
 
+  if (ret != 0)
+  {
+    return ret;
+  }
+
   data->heat.raw = (int16_t)buff[1U];
   data->heat.raw = (data->heat.raw * 256) + (int16_t) buff[0];
   /* temperature conversion */
@@ -878,6 +921,11 @@ int32_t iis2dulpx_ah_qvar_data_get(const stmdev_ctx_t *ctx,
   /* Read and discard also OUT_Z_H reg to clear drdy */
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_OUT_T_AH_QVAR_L - 1, buff, 3);
 
+  if (ret != 0)
+  {
+    return ret;
+  }
+
   data->raw = (int16_t)buff[2U];
   data->raw = (data->raw * 256) + (int16_t) buff[1U];
 
@@ -901,6 +949,10 @@ int32_t iis2dulpx_self_test_sign_set(const stmdev_ctx_t *ctx, iis2dulpx_xl_self_
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL3, (uint8_t *)&ctrl3, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_WAKE_UP_DUR, (uint8_t *)&wkup_dur, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch (val)
   {
@@ -1010,12 +1062,18 @@ int32_t iis2dulpx_i3c_configure_set(const stmdev_ctx_t *ctx, const iis2dulpx_i3c
   * @param  val   configuration params
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
-  */int32_t iis2dulpx_i3c_configure_get(const stmdev_ctx_t *ctx, iis2dulpx_i3c_cfg_t *val)
+  */
+int32_t iis2dulpx_i3c_configure_get(const stmdev_ctx_t *ctx, iis2dulpx_i3c_cfg_t *val)
 {
   iis2dulpx_i3c_if_ctrl_t i3c_cfg;
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_I3C_IF_CTRL, (uint8_t *)&i3c_cfg, 1);
+
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   val->drstdaa_en = i3c_cfg.dis_drstdaa;
   val->asf_on = i3c_cfg.asf_on;
@@ -1081,6 +1139,10 @@ int32_t iis2dulpx_mem_bank_get(const stmdev_ctx_t *ctx, iis2dulpx_mem_bank_t *va
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FUNC_CFG_ACCESS, (uint8_t *)&func_cfg_access, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch ((func_cfg_access.emb_func_reg_access))
   {
@@ -1131,12 +1193,20 @@ int32_t iis2dulpx_ln_pg_write(const stmdev_ctx_t *ctx, uint16_t address, uint8_t
 
   /* page write */
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
+  if (ret != 0)
+  {
+    goto exit;
+  }
   page_rw.page_read = PROPERTY_DISABLE;
   page_rw.page_write = PROPERTY_ENABLE;
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
 
   /* set page num */
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
+  if (ret != 0)
+  {
+    goto exit;
+  }
   page_sel.page_sel = msb;
   page_sel.not_used0 = 1; // Default value
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
@@ -1156,6 +1226,10 @@ int32_t iis2dulpx_ln_pg_write(const stmdev_ctx_t *ctx, uint16_t address, uint8_t
     {
       msb++;
       ret += iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
+      if (ret != 0)
+      {
+        goto exit;
+      }
       page_sel.page_sel = msb;
       page_sel.not_used0 = 1; // Default value
       ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
@@ -1172,6 +1246,10 @@ int32_t iis2dulpx_ln_pg_write(const stmdev_ctx_t *ctx, uint16_t address, uint8_t
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
 
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
+  if (ret != 0)
+  {
+    goto exit;
+  }
   page_rw.page_read = PROPERTY_DISABLE;
   page_rw.page_write = PROPERTY_DISABLE;
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
@@ -1214,6 +1292,10 @@ int32_t iis2dulpx_ln_pg_read(const stmdev_ctx_t *ctx, uint16_t address, uint8_t 
 
   /* page read */
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
+  if (ret != 0)
+  {
+    goto exit;
+  }
   page_rw.page_read = PROPERTY_ENABLE;
   page_rw.page_write = PROPERTY_DISABLE;
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
@@ -1224,6 +1306,10 @@ int32_t iis2dulpx_ln_pg_read(const stmdev_ctx_t *ctx, uint16_t address, uint8_t 
 
   /* set page num */
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
+  if (ret != 0)
+  {
+    goto exit;
+  }
   page_sel.page_sel = msb;
   page_sel.not_used0 = 1; // Default value
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
@@ -1249,6 +1335,10 @@ int32_t iis2dulpx_ln_pg_read(const stmdev_ctx_t *ctx, uint16_t address, uint8_t 
 
       /* set page */
       ret += iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
+      if (ret != 0)
+      {
+        goto exit;
+      }
       page_sel.page_sel = msb;
       page_sel.not_used0 = 1; // Default value
       ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
@@ -1265,6 +1355,10 @@ int32_t iis2dulpx_ln_pg_read(const stmdev_ctx_t *ctx, uint16_t address, uint8_t 
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
 
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
+  if (ret != 0)
+  {
+    goto exit;
+  }
   page_rw.page_read = PROPERTY_DISABLE;
   page_rw.page_write = PROPERTY_DISABLE;
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
@@ -1301,8 +1395,11 @@ int32_t iis2dulpx_ext_clk_en_set(const stmdev_ctx_t *ctx, uint8_t val)
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EXT_CLK_CFG, (uint8_t *)&clk, 1);
-  clk.ext_clk_en = val;
-  ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EXT_CLK_CFG, (uint8_t *)&clk, 1);
+  if (ret == 0)
+  {
+    clk.ext_clk_en = val;
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EXT_CLK_CFG, (uint8_t *)&clk, 1);
+  }
 
   return ret;
 }
@@ -1321,7 +1418,10 @@ int32_t iis2dulpx_ext_clk_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EXT_CLK_CFG, (uint8_t *)&clk, 1);
-  *val = clk.ext_clk_en;
+  if (ret == 0)
+  {
+    *val = clk.ext_clk_en;
+  }
 
   return ret;
 }
@@ -1371,12 +1471,15 @@ int32_t iis2dulpx_pin_conf_get(const stmdev_ctx_t *ctx, iis2dulpx_pin_conf_t *va
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_PIN_CTRL, (uint8_t *)&pin_ctrl, 1);
 
-  val->cs_pull_up = ~pin_ctrl.cs_pu_dis;
-  val->int1_pull_down = ~pin_ctrl.pd_dis_int1;
-  val->int2_pull_down = ~pin_ctrl.pd_dis_int2;
-  val->sda_pull_up = pin_ctrl.sda_pu_en;
-  val->sdo_pull_up = pin_ctrl.sdo_pu_en;
-  val->int1_int2_push_pull = ~pin_ctrl.pp_od;
+  if (ret == 0)
+  {
+    val->cs_pull_up = ~pin_ctrl.cs_pu_dis;
+    val->int1_pull_down = ~pin_ctrl.pd_dis_int1;
+    val->int2_pull_down = ~pin_ctrl.pd_dis_int2;
+    val->sda_pull_up = pin_ctrl.sda_pu_en;
+    val->sdo_pull_up = pin_ctrl.sdo_pu_en;
+    val->int1_int2_push_pull = ~pin_ctrl.pp_od;
+  }
 
   return ret;
 }
@@ -1419,6 +1522,11 @@ int32_t iis2dulpx_int_pin_polarity_get(const stmdev_ctx_t *ctx, iis2dulpx_int_pi
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_PIN_CTRL, (uint8_t *)&pin_ctrl, 1);
+
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch ((pin_ctrl.h_lactive))
   {
@@ -1475,6 +1583,10 @@ int32_t iis2dulpx_spi_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_spi_mode *val)
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_PIN_CTRL, (uint8_t *)&pin_ctrl, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch ((pin_ctrl.sim))
   {
@@ -1924,19 +2036,22 @@ int32_t iis2dulpx_embedded_int_cfg_set(const stmdev_ctx_t *ctx, iis2dulpx_embedd
   {
     ret = iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
 
-    switch (val)
+    if (ret == 0)
     {
-      case IIS2DULPX_EMBEDDED_INT_LEVEL:
-        page_rw.emb_func_lir = 0;
-        break;
+      switch (val)
+      {
+        case IIS2DULPX_EMBEDDED_INT_LEVEL:
+          page_rw.emb_func_lir = 0;
+          break;
 
-      case IIS2DULPX_EMBEDDED_INT_LATCHED:
-      default:
-        page_rw.emb_func_lir = 1;
-        break;
+        case IIS2DULPX_EMBEDDED_INT_LATCHED:
+        default:
+          page_rw.emb_func_lir = 1;
+          break;
+      }
+
+      ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
     }
-
-    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
   }
 
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
@@ -1963,13 +2078,16 @@ int32_t iis2dulpx_embedded_int_cfg_get(const stmdev_ctx_t *ctx,
   {
     ret = iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
 
-    if (page_rw.emb_func_lir == 0U)
+    if (ret == 0)
     {
-      *val = IIS2DULPX_EMBEDDED_INT_LEVEL;
-    }
-    else
-    {
-      *val = IIS2DULPX_EMBEDDED_INT_LATCHED;
+      if (page_rw.emb_func_lir == 0U)
+      {
+        *val = IIS2DULPX_EMBEDDED_INT_LEVEL;
+      }
+      else
+      {
+        *val = IIS2DULPX_EMBEDDED_INT_LATCHED;
+      }
     }
   }
 
@@ -2245,7 +2363,10 @@ int32_t iis2dulpx_fifo_data_level_get(const stmdev_ctx_t *ctx, uint16_t *val)
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_STATUS2, &buff, 1);
 
-  *val = buff;
+  if (ret == 0)
+  {
+    *val = buff;
+  }
 
   return ret;
 }
@@ -2257,7 +2378,10 @@ int32_t iis2dulpx_fifo_wtm_flag_get(const stmdev_ctx_t *ctx, uint8_t *val)
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_STATUS1, (uint8_t *)&fifo_status1, 1);
 
-  *val = fifo_status1.fifo_wtm_ia;
+  if (ret == 0)
+  {
+    *val = fifo_status1.fifo_wtm_ia;
+  }
 
   return ret;
 }
@@ -2269,7 +2393,10 @@ int32_t iis2dulpx_fifo_sensor_tag_get(const stmdev_ctx_t *ctx, iis2dulpx_fifo_se
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_DATA_OUT_TAG, (uint8_t *)&fifo_tag, 1);
 
-  *val = (iis2dulpx_fifo_sensor_tag_t) fifo_tag.tag_sensor;
+  if (ret == 0)
+  {
+    *val = (iis2dulpx_fifo_sensor_tag_t) fifo_tag.tag_sensor;
+  }
 
   return ret;
 }
@@ -2292,6 +2419,10 @@ int32_t iis2dulpx_fifo_data_get(const stmdev_ctx_t *ctx, const iis2dulpx_md_t *m
   int32_t ret, i;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FIFO_DATA_OUT_TAG, (uint8_t *)&fifo_tag, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
   data->tag = fifo_tag.tag_sensor;
 
   switch (fifo_tag.tag_sensor)
@@ -2300,6 +2431,10 @@ int32_t iis2dulpx_fifo_data_get(const stmdev_ctx_t *ctx, const iis2dulpx_md_t *m
     case IIS2DULPX_XL_ONLY_2X_TAG_2ND:
       /* A FIFO sample consists of 2X 8-bits 3-axis XL at ODR/2 */
       ret = iis2dulpx_fifo_out_raw_get(ctx, fifo_raw);
+      if (ret != 0)
+      {
+        return ret;
+      }
       for (i = 0; i < 3; i++)
       {
         data->xl[0].raw[i] = (int16_t)fifo_raw[i] * 256;
@@ -2309,6 +2444,10 @@ int32_t iis2dulpx_fifo_data_get(const stmdev_ctx_t *ctx, const iis2dulpx_md_t *m
     case IIS2DULPX_XL_AND_QVAR:
     case IIS2DULPX_XL_TEMP_TAG:
       ret = iis2dulpx_fifo_out_raw_get(ctx, fifo_raw);
+      if (ret != 0)
+      {
+        return ret;
+      }
       if (fmd->xl_only == 0x0U)
       {
         /* A FIFO sample consists of 12-bits 3-axis XL + T at ODR*/
@@ -2340,6 +2479,10 @@ int32_t iis2dulpx_fifo_data_get(const stmdev_ctx_t *ctx, const iis2dulpx_md_t *m
       break;
     case IIS2DULPX_TIMESTAMP_TAG:
       ret = iis2dulpx_fifo_out_raw_get(ctx, fifo_raw);
+      if (ret != 0)
+      {
+        return ret;
+      }
 
       data->cfg_chg.cfg_change = fifo_raw[0] >> 7;
       data->cfg_chg.odr = (fifo_raw[0] >> 3) & 0xFU;
@@ -2358,6 +2501,10 @@ int32_t iis2dulpx_fifo_data_get(const stmdev_ctx_t *ctx, const iis2dulpx_md_t *m
 
     case IIS2DULPX_STEP_COUNTER_TAG:
       ret = iis2dulpx_fifo_out_raw_get(ctx, fifo_raw);
+      if (ret != 0)
+      {
+        return ret;
+      }
 
       data->pedo.steps = fifo_raw[1];
       data->pedo.steps = (data->pedo.steps * 256U) +  fifo_raw[0];
@@ -2448,6 +2595,10 @@ int32_t iis2dulpx_ah_qvar_mode_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_AH_QVAR_CFG, (uint8_t *)&ah_qvar_cfg, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch (ah_qvar_cfg.ah_qvar_gain)
   {
@@ -2534,19 +2685,23 @@ int32_t iis2dulpx_stpcnt_mode_set(const stmdev_ctx_t *ctx, iis2dulpx_stpcnt_mode
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B, (uint8_t *)&emb_func_en_b, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&emb_func_fifo_en, 1);
 
-  if ((val.false_step_rej == PROPERTY_ENABLE)
-      && ((emb_func_en_a.mlc_before_fsm_en & emb_func_en_b.mlc_en) == PROPERTY_DISABLE))
+  if (ret == 0)
   {
-    emb_func_en_a.mlc_before_fsm_en = PROPERTY_ENABLE;
+    if ((val.false_step_rej == PROPERTY_ENABLE)
+        && ((emb_func_en_a.mlc_before_fsm_en & emb_func_en_b.mlc_en) == PROPERTY_DISABLE))
+    {
+      emb_func_en_a.mlc_before_fsm_en = PROPERTY_ENABLE;
+    }
+
+    emb_func_fifo_en.step_counter_fifo_en = val.step_counter_in_fifo;
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&emb_func_fifo_en, 1);
+
+    emb_func_en_a.pedo_en = val.step_counter_enable;
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
   }
 
-  emb_func_fifo_en.step_counter_fifo_en = val.step_counter_in_fifo;
-  ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&emb_func_fifo_en, 1);
-
-  emb_func_en_a.pedo_en = val.step_counter_enable;
-  ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
-
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
+
   ret += iis2dulpx_ln_pg_read(ctx, IIS2DULPX_EMB_ADV_PG_0 + IIS2DULPX_PEDO_CMD_REG,
                               (uint8_t *)&pedo_cmd_reg, 1);
 
@@ -2582,9 +2737,13 @@ int32_t iis2dulpx_stpcnt_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_stpcnt_mode
 
   ret += iis2dulpx_ln_pg_read(ctx, IIS2DULPX_EMB_ADV_PG_0 + IIS2DULPX_PEDO_CMD_REG,
                               (uint8_t *)&pedo_cmd_reg, 1);
-  val->false_step_rej = pedo_cmd_reg.fp_rejection_en;
-  val->step_counter_enable = emb_func_en_a.pedo_en;
-  val->step_counter_in_fifo = emb_func_fifo_en.step_counter_fifo_en;
+
+  if (ret == 0)
+  {
+    val->false_step_rej = pedo_cmd_reg.fp_rejection_en;
+    val->step_counter_enable = emb_func_en_a.pedo_en;
+    val->step_counter_in_fifo = emb_func_fifo_en.step_counter_fifo_en;
+  }
 
   return ret;
 }
@@ -2606,8 +2765,11 @@ int32_t iis2dulpx_stpcnt_steps_get(const stmdev_ctx_t *ctx, uint16_t *val)
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_STEP_COUNTER_L, &buff[0], 2);
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
 
-  *val = buff[1];
-  *val = (*val * 256U) + buff[0];
+  if (ret == 0)
+  {
+    *val = buff[1];
+    *val = (*val * 256U) + buff[0];
+  }
 
   return ret;
 }
@@ -2626,9 +2788,9 @@ int32_t iis2dulpx_stpcnt_rst_step_set(const stmdev_ctx_t *ctx)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_SRC, (uint8_t *)&emb_func_src, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_SRC, (uint8_t *)&emb_func_src, 1);
     emb_func_src.pedo_rst_step = 1;
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_SRC, (uint8_t *)&emb_func_src, 1);
   }
@@ -2673,7 +2835,10 @@ int32_t iis2dulpx_stpcnt_debounce_get(const stmdev_ctx_t *ctx, uint8_t *val)
 
   ret = iis2dulpx_ln_pg_read(ctx, IIS2DULPX_EMB_ADV_PG_0 + IIS2DULPX_PEDO_DEB_STEPS_CONF,
                              (uint8_t *)&pedo_deb_steps_conf, 1);
-  *val = pedo_deb_steps_conf.deb_step;
+  if (ret == 0)
+  {
+    *val = pedo_deb_steps_conf.deb_step;
+  }
 
   return ret;
 }
@@ -2715,8 +2880,11 @@ int32_t iis2dulpx_stpcnt_period_get(const stmdev_ctx_t *ctx, uint16_t *val)
 
   ret = iis2dulpx_ln_pg_read(ctx, IIS2DULPX_EMB_ADV_PG_0 + IIS2DULPX_PEDO_SC_DELTAT_L,
                              (uint8_t *)buff, 2);
-  *val = buff[1];
-  *val = (*val * 256U) + buff[0];
+  if (ret == 0)
+  {
+    *val = buff[1];
+    *val = (*val * 256U) + buff[0];
+  }
 
   return ret;
 }
@@ -2735,6 +2903,10 @@ int32_t iis2dulpx_smart_power_set(const stmdev_ctx_t *ctx, iis2dulpx_smart_power
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL1, (uint8_t *)&ctrl1, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
   ctrl1.smart_power_en = val.enable;
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_CTRL1, (uint8_t *)&ctrl1, 1);
 
@@ -2766,12 +2938,16 @@ int32_t iis2dulpx_smart_power_get(const stmdev_ctx_t *ctx, iis2dulpx_smart_power
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_CTRL1, (uint8_t *)&ctrl1, 1);
-  val->enable = ctrl1.smart_power_en;
 
   ret += iis2dulpx_ln_pg_read(ctx, IIS2DULPX_EMB_ADV_PG_0 + IIS2DULPX_SMART_POWER_CTRL,
                               (uint8_t *)&smart_power_ctrl, 1);
-  val->window = smart_power_ctrl.smart_power_ctrl_win;
-  val->duration = smart_power_ctrl.smart_power_ctrl_dur;
+
+  if (ret == 0)
+  {
+    val->enable = ctrl1.smart_power_en;
+    val->window = smart_power_ctrl.smart_power_ctrl_win;
+    val->duration = smart_power_ctrl.smart_power_ctrl_dur;
+  }
 
   return ret;
 }
@@ -2801,9 +2977,9 @@ int32_t iis2dulpx_tilt_mode_set(const stmdev_ctx_t *ctx, uint8_t val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
     emb_func_en_a.tilt_en = val;
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
   }
@@ -2827,9 +3003,9 @@ int32_t iis2dulpx_tilt_mode_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
     *val = emb_func_en_a.tilt_en;
   }
 
@@ -2863,9 +3039,9 @@ int32_t iis2dulpx_sigmot_mode_set(const stmdev_ctx_t *ctx, uint8_t val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
     emb_func_en_a.sign_motion_en = val;
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
   }
@@ -2889,9 +3065,9 @@ int32_t iis2dulpx_sigmot_mode_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_func_en_a, 1);
     *val = emb_func_en_a.sign_motion_en;
   }
 
@@ -2934,9 +3110,9 @@ int32_t iis2dulpx_ff_duration_set(const stmdev_ctx_t *ctx, uint8_t val)
     ret = iis2dulpx_write_reg(ctx, IIS2DULPX_WAKE_UP_DUR, (uint8_t *)&wake_up_dur, 1);
   }
 
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FREE_FALL, (uint8_t *)&free_fall, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FREE_FALL, (uint8_t *)&free_fall, 1);
     free_fall.ff_dur = val & 0x1FU;
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FREE_FALL, (uint8_t *)&free_fall, 1);
   }
@@ -2961,7 +3137,10 @@ int32_t iis2dulpx_ff_duration_get(const stmdev_ctx_t *ctx, uint8_t *val)
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_WAKE_UP_DUR, (uint8_t *)&wake_up_dur, 1);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FREE_FALL, (uint8_t *)&free_fall, 1);
 
-  *val = (wake_up_dur.ff_dur << 5) | free_fall.ff_dur;
+  if (ret == 0)
+  {
+    *val = (wake_up_dur.ff_dur << 5) | free_fall.ff_dur;
+  }
 
   return ret;
 }
@@ -2980,8 +3159,11 @@ int32_t iis2dulpx_ff_thresholds_set(const stmdev_ctx_t *ctx, iis2dulpx_ff_thresh
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FREE_FALL, (uint8_t *)&free_fall, 1);
-  free_fall.ff_ths = ((uint8_t)val & 0x7U);
-  ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FREE_FALL, (uint8_t *)&free_fall, 1);
+  if (ret == 0)
+  {
+    free_fall.ff_ths = ((uint8_t)val & 0x7U);
+    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FREE_FALL, (uint8_t *)&free_fall, 1);
+  }
 
   return ret;
 }
@@ -3000,6 +3182,11 @@ int32_t iis2dulpx_ff_thresholds_get(const stmdev_ctx_t *ctx, iis2dulpx_ff_thresh
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FREE_FALL, (uint8_t *)&free_fall, 1);
+
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch (free_fall.ff_ths)
   {
@@ -3093,6 +3280,10 @@ int32_t iis2dulpx_sixd_config_get(const stmdev_ctx_t *ctx, iis2dulpx_sixd_config
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_SIXD, (uint8_t *)&sixd, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   val->mode = (iis2dulpx_mode_t)sixd.d4d_en;
 
@@ -3400,7 +3591,10 @@ int32_t iis2dulpx_timestamp_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_INTERRUPT_CFG, (uint8_t *)&int_cfg, 1);
-  *val = int_cfg.timestamp_en;
+  if (ret == 0)
+  {
+    *val = int_cfg.timestamp_en;
+  }
 
   return ret;
 }
@@ -3421,6 +3615,10 @@ int32_t iis2dulpx_timestamp_raw_get(const stmdev_ctx_t *ctx, uint32_t *val)
   int32_t ret;
 
   ret = iis2dulpx_read_reg(ctx, IIS2DULPX_TIMESTAMP0, buff, 4);
+  if (ret != 0)
+  {
+    return ret;
+  }
   *val = buff[3];
   *val = (*val * 256U) +  buff[2];
   *val = (*val * 256U) +  buff[1];
@@ -3458,12 +3656,10 @@ int32_t iis2dulpx_long_cnt_flag_data_ready_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_STATUS,
+                            (uint8_t *)&emb_func_status, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_STATUS,
-                             (uint8_t *)&emb_func_status, 1);
-
     *val = emb_func_status.is_fsm_lc;
   }
 
@@ -3486,12 +3682,10 @@ int32_t iis2dulpx_emb_fsm_en_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   iis2dulpx_emb_func_en_b_t emb_func_en_b;
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B,
+                            (uint8_t *)&emb_func_en_b, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B,
-                             (uint8_t *)&emb_func_en_b, 1);
-
     emb_func_en_b.fsm_en = (uint8_t)val;
 
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B,
@@ -3517,12 +3711,10 @@ int32_t iis2dulpx_emb_fsm_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
 
   iis2dulpx_emb_func_en_b_t emb_func_en_b;
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B,
+                            (uint8_t *)&emb_func_en_b, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B,
-                             (uint8_t *)&emb_func_en_b, 1);
-
     *val = emb_func_en_b.fsm_en;
   }
 
@@ -3553,11 +3745,10 @@ int32_t iis2dulpx_fsm_enable_set(const stmdev_ctx_t *ctx,
                               (uint8_t *)&val->fsm_enable, 1);
   }
 
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B,
+                            (uint8_t *)&emb_func_en_b, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B,
-                             (uint8_t *)&emb_func_en_b, 1);
-
     if ((val->fsm_enable.fsm1_en |
          val->fsm_enable.fsm2_en |
          val->fsm_enable.fsm3_en |
@@ -3718,12 +3909,10 @@ int32_t iis2dulpx_fsm_data_rate_set(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FSM_ODR,
+                            (uint8_t *)&fsm_odr_reg, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FSM_ODR,
-                             (uint8_t *)&fsm_odr_reg, 1);
-
     fsm_odr_reg.fsm_odr = (uint8_t)val;
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_FSM_ODR,
                                (uint8_t *)&fsm_odr_reg, 1);
@@ -3751,6 +3940,11 @@ int32_t iis2dulpx_fsm_data_rate_get(const stmdev_ctx_t *ctx,
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_FSM_ODR, (uint8_t *)&fsm_odr_reg, 1);
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
+
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch (fsm_odr_reg.fsm_odr)
   {
@@ -3804,12 +3998,11 @@ int32_t iis2dulpx_fsm_init_set(const stmdev_ctx_t *ctx, uint8_t val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_INIT_B,
+                            (uint8_t *)&emb_func_init_b, 1);
 
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_INIT_B,
-                             (uint8_t *)&emb_func_init_b, 1);
-
     emb_func_init_b.fsm_init = (uint8_t)val;
 
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_INIT_B,
@@ -3835,12 +4028,10 @@ int32_t iis2dulpx_fsm_init_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_INIT_B,
+                            (uint8_t *)&emb_func_init_b, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_INIT_B,
-                             (uint8_t *)&emb_func_init_b, 1);
-
     *val = emb_func_init_b.fsm_init;
   }
 
@@ -3863,10 +4054,9 @@ int32_t iis2dulpx_fsm_fifo_en_set(const stmdev_ctx_t *ctx, uint8_t val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
     fifo_reg.fsm_fifo_en = val;
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
   }
@@ -3890,10 +4080,9 @@ int32_t iis2dulpx_fsm_fifo_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
     *val = fifo_reg.fsm_fifo_en;
   }
 
@@ -3944,8 +4133,11 @@ int32_t iis2dulpx_long_cnt_int_value_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = iis2dulpx_ln_pg_read(ctx, IIS2DULPX_FSM_LC_TIMEOUT_L, buff, 2);
-  *val = buff[1];
-  *val = (*val * 256U) + buff[0];
+  if (ret == 0)
+  {
+    *val = buff[1];
+    *val = (*val * 256U) + buff[0];
+  }
 
   return ret;
 }
@@ -4022,8 +4214,11 @@ int32_t iis2dulpx_fsm_start_address_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = iis2dulpx_ln_pg_read(ctx, IIS2DULPX_FSM_START_ADD_L, buff, 2);
-  *val = buff[1];
-  *val = (*val * 256U) +  buff[0];
+  if (ret == 0)
+  {
+    *val = buff[1];
+    *val = (*val * 256U) +  buff[0];
+  }
 
   return ret;
 }
@@ -4063,27 +4258,30 @@ int32_t iis2dulpx_mlc_set(const stmdev_ctx_t *ctx, iis2dulpx_mlc_mode_t val)
     ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_en_a, 1);
     ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B, (uint8_t *)&emb_en_b, 1);
 
-    switch (val)
+    if (ret == 0)
     {
-      case IIS2DULPX_MLC_OFF:
-        emb_en_a.mlc_before_fsm_en = 0;
-        emb_en_b.mlc_en = 0;
-        break;
-      case IIS2DULPX_MLC_ON:
-        emb_en_a.mlc_before_fsm_en = 0;
-        emb_en_b.mlc_en = 1;
-        break;
-      case IIS2DULPX_MLC_ON_BEFORE_FSM:
-        emb_en_a.mlc_before_fsm_en = 1;
-        emb_en_b.mlc_en = 0;
-        break;
-      default:
-        /* do nothing */
-        break;
-    }
+      switch (val)
+      {
+        case IIS2DULPX_MLC_OFF:
+          emb_en_a.mlc_before_fsm_en = 0;
+          emb_en_b.mlc_en = 0;
+          break;
+        case IIS2DULPX_MLC_ON:
+          emb_en_a.mlc_before_fsm_en = 0;
+          emb_en_b.mlc_en = 1;
+          break;
+        case IIS2DULPX_MLC_ON_BEFORE_FSM:
+          emb_en_a.mlc_before_fsm_en = 1;
+          emb_en_b.mlc_en = 0;
+          break;
+        default:
+          /* do nothing */
+          break;
+      }
 
-    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_en_a, 1);
-    ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B, (uint8_t *)&emb_en_b, 1);
+      ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_en_a, 1);
+      ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B, (uint8_t *)&emb_en_b, 1);
+    }
   }
 
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
@@ -4113,21 +4311,24 @@ int32_t iis2dulpx_mlc_get(const stmdev_ctx_t *ctx, iis2dulpx_mlc_mode_t *val)
     ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_A, (uint8_t *)&emb_en_a, 1);
     ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_EN_B, (uint8_t *)&emb_en_b, 1);
 
-    if (emb_en_a.mlc_before_fsm_en == 0U && emb_en_b.mlc_en == 0U)
+    if (ret == 0)
     {
-      *val = IIS2DULPX_MLC_OFF;
-    }
-    else if (emb_en_a.mlc_before_fsm_en == 0U && emb_en_b.mlc_en == 1U)
-    {
-      *val = IIS2DULPX_MLC_ON;
-    }
-    else if (emb_en_a.mlc_before_fsm_en == 1U)
-    {
-      *val = IIS2DULPX_MLC_ON_BEFORE_FSM;
-    }
-    else
-    {
-      /* Do nothing */
+      if (emb_en_a.mlc_before_fsm_en == 0U && emb_en_b.mlc_en == 0U)
+      {
+        *val = IIS2DULPX_MLC_OFF;
+      }
+      else if (emb_en_a.mlc_before_fsm_en == 0U && emb_en_b.mlc_en == 1U)
+      {
+        *val = IIS2DULPX_MLC_ON;
+      }
+      else if (emb_en_a.mlc_before_fsm_en == 1U)
+      {
+        *val = IIS2DULPX_MLC_ON_BEFORE_FSM;
+      }
+      else
+      {
+        /* Do nothing */
+      }
     }
   }
 
@@ -4188,10 +4389,10 @@ int32_t iis2dulpx_mlc_data_rate_set(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_MLC_ODR, (uint8_t *)&reg, 1);
 
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_MLC_ODR, (uint8_t *)&reg, 1);
     reg.mlc_odr = (uint8_t)val;
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_MLC_ODR, (uint8_t *)&reg, 1);
   }
@@ -4219,10 +4420,10 @@ int32_t iis2dulpx_mlc_data_rate_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_MLC_ODR, (uint8_t *)&reg, 1);
 
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_MLC_ODR, (uint8_t *)&reg, 1);
 
     switch (reg.mlc_odr)
     {
@@ -4271,10 +4472,9 @@ int32_t iis2dulpx_mlc_fifo_en_set(const stmdev_ctx_t *ctx, uint8_t val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
-
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
     fifo_reg.mlc_fifo_en = val;
     ret += iis2dulpx_write_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
   }
@@ -4298,10 +4498,10 @@ int32_t iis2dulpx_mlc_fifo_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = iis2dulpx_mem_bank_set(ctx, IIS2DULPX_EMBED_FUNC_MEM_BANK);
+  ret += iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
 
   if (ret == 0)
   {
-    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_EMB_FUNC_FIFO_EN, (uint8_t *)&fifo_reg, 1);
     *val = fifo_reg.mlc_fifo_en;
   }
 
