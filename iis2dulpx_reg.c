@@ -16,6 +16,7 @@
  ******************************************************************************
  */
 
+#include <string.h>
 #include "iis2dulpx_reg.h"
 
 /**
@@ -173,6 +174,10 @@ int32_t iis2dulpx_init_set(const stmdev_ctx_t *ctx)
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_CTRL4, (uint8_t *)&ctrl4, 1);
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_CTRL1, (uint8_t *)&ctrl1, 1);
 
+  if (ctx->priv_data)
+  {
+    memset(ctx->priv_data, 0, sizeof(iis2dulpx_priv_t));
+  }
 
   return ret;
 }
@@ -279,6 +284,11 @@ int32_t iis2dulpx_sw_por(const stmdev_ctx_t *ctx)
 
   if (ret == 0)
   {
+    if (ctx->priv_data)
+    {
+      memset(ctx->priv_data, 0, sizeof(iis2dulpx_priv_t));
+    }
+
     ret = iis2dulpx_exit_deep_power_down(ctx);
   }
 
@@ -1179,23 +1189,43 @@ int32_t iis2dulpx_i3c_configure_get(const stmdev_ctx_t *ctx, iis2dulpx_i3c_cfg_t
   * @brief  Change memory bank.[set]
   *
   * @param  ctx      read / write interface definitions
-  * @param  val      MAIN_MEM_BANK, EMBED_FUNC_MEM_BANK, SENSOR_HUB_MEM_BANK, STRED_MEM_BANK,
+  * @param  val      MAIN_MEM_BANK, EMBED_FUNC_MEM_BANK
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
 int32_t iis2dulpx_mem_bank_set(const stmdev_ctx_t *ctx, iis2dulpx_mem_bank_t val)
 {
   iis2dulpx_func_cfg_access_t func_cfg_access;
-  int32_t ret;
+  int32_t ret = 0;
 
-  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FUNC_CFG_ACCESS, (uint8_t *)&func_cfg_access, 1);
+  if (ctx->priv_data == NULL)
+  {
+    ret = -1;
+    goto exit;
+  }
+
+  /* init from saved register */
+  func_cfg_access = ((iis2dulpx_priv_t *)ctx->priv_data)->func_cfg_access_main;
+
+  if (func_cfg_access.emb_func_reg_access == 0)
+  {
+    /* MAIN page */
+    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FUNC_CFG_ACCESS, (uint8_t *)&func_cfg_access, 1);
+  }
 
   if (ret == 0)
   {
     func_cfg_access.emb_func_reg_access = ((uint8_t)val & 0x1U);
     ret = iis2dulpx_write_reg(ctx, IIS2DULPX_FUNC_CFG_ACCESS, (uint8_t *)&func_cfg_access, 1);
+
+    if (ret == 0)
+    {
+      /* save register in private data */
+      ((iis2dulpx_priv_t *)ctx->priv_data)->func_cfg_access_main = func_cfg_access;
+    }
   }
 
+exit:
   return ret;
 }
 
@@ -1203,7 +1233,7 @@ int32_t iis2dulpx_mem_bank_set(const stmdev_ctx_t *ctx, iis2dulpx_mem_bank_t val
   * @brief  Change memory bank.[get]
   *
   * @param  ctx      read / write interface definitions
-  * @param  val      MAIN_MEM_BANK, EMBED_FUNC_MEM_BANK, SENSOR_HUB_MEM_BANK, STRED_MEM_BANK,
+  * @param  val      MAIN_MEM_BANK, EMBED_FUNC_MEM_BANK
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
@@ -1212,10 +1242,26 @@ int32_t iis2dulpx_mem_bank_get(const stmdev_ctx_t *ctx, iis2dulpx_mem_bank_t *va
   iis2dulpx_func_cfg_access_t func_cfg_access;
   int32_t ret;
 
-  ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FUNC_CFG_ACCESS, (uint8_t *)&func_cfg_access, 1);
-  if (ret != 0)
+  if (ctx->priv_data == NULL)
   {
-    return ret;
+    ret = -1;
+    goto exit;
+  }
+
+  /* init from saved register */
+  func_cfg_access = ((iis2dulpx_priv_t *)ctx->priv_data)->func_cfg_access_main;
+
+  if (func_cfg_access.emb_func_reg_access == 0)
+  {
+    /* MAIN page */
+    ret = iis2dulpx_read_reg(ctx, IIS2DULPX_FUNC_CFG_ACCESS, (uint8_t *)&func_cfg_access, 1);
+    if (ret != 0)
+    {
+      goto exit;
+    }
+
+    /* save register in private data */
+    ((iis2dulpx_priv_t *)ctx->priv_data)->func_cfg_access_main = func_cfg_access;
   }
 
   switch ((func_cfg_access.emb_func_reg_access))
@@ -1232,6 +1278,8 @@ int32_t iis2dulpx_mem_bank_get(const stmdev_ctx_t *ctx, iis2dulpx_mem_bank_t *va
       *val = IIS2DULPX_MAIN_MEM_BANK;
       break;
   }
+
+exit:
   return ret;
 }
 

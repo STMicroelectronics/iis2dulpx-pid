@@ -2272,6 +2272,11 @@ typedef struct
 int32_t iis2dulpx_i3c_configure_set(const stmdev_ctx_t *ctx, const iis2dulpx_i3c_cfg_t *val);
 int32_t iis2dulpx_i3c_configure_get(const stmdev_ctx_t *ctx, iis2dulpx_i3c_cfg_t *val);
 
+typedef struct
+{
+  iis2dulpx_func_cfg_access_t func_cfg_access_main;
+} iis2dulpx_priv_t;
+
 typedef enum
 {
   IIS2DULPX_MAIN_MEM_BANK       = 0x0,
