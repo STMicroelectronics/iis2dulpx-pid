@@ -1315,20 +1315,16 @@ int32_t iis2dulpx_ln_pg_write(const stmdev_ctx_t *ctx, uint16_t address, uint8_t
     }
   }
 
+exit:
   page_sel.page_sel = 0;
   page_sel.not_used0 = 1;// Default value
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
 
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
-  if (ret != 0)
-  {
-    goto exit;
-  }
   page_rw.page_read = PROPERTY_DISABLE;
   page_rw.page_write = PROPERTY_DISABLE;
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
 
-exit:
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
 
   return ret;
@@ -1424,20 +1420,16 @@ int32_t iis2dulpx_ln_pg_read(const stmdev_ctx_t *ctx, uint16_t address, uint8_t 
     }
   }
 
+exit:
   page_sel.page_sel = 0;
   page_sel.not_used0 = 1;// Default value
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_SEL, (uint8_t *)&page_sel, 1);
 
   ret += iis2dulpx_read_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
-  if (ret != 0)
-  {
-    goto exit;
-  }
   page_rw.page_read = PROPERTY_DISABLE;
   page_rw.page_write = PROPERTY_DISABLE;
   ret += iis2dulpx_write_reg(ctx, IIS2DULPX_PAGE_RW, (uint8_t *)&page_rw, 1);
 
-exit:
   ret += iis2dulpx_mem_bank_set(ctx, IIS2DULPX_MAIN_MEM_BANK);
 
   return ret;
