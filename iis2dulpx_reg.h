@@ -2646,13 +2646,13 @@ int32_t iis2dulpx_sixd_config_get(const stmdev_ctx_t *ctx, iis2dulpx_sixd_config
 
 typedef enum
 {
-  IIS2DULPX_0_ODR  = 0x000, /* 0 ODR time */
-  IIS2DULPX_1_ODR  = 0x001, /* 1 ODR time */
-  IIS2DULPX_2_ODR  = 0x002, /* 2 ODR time */
-  IIS2DULPX_3_ODR  = 0x100, /* 3 ODR time */
-  IIS2DULPX_7_ODR  = 0x101, /* 7 ODR time */
-  IIS2DULPX_11_ODR = 0x102, /* 11 ODR time */
-  IIS2DULPX_15_ODR = 0x103, /* 15 ODR time */
+  IIS2DULPX_0_ODR  = 0x00, /* 0 ODR time */
+  IIS2DULPX_1_ODR  = 0x01, /* 1 ODR time */
+  IIS2DULPX_2_ODR  = 0x02, /* 2 ODR time */
+  IIS2DULPX_3_ODR  = 0x10, /* 3 ODR time */
+  IIS2DULPX_7_ODR  = 0x11, /* 7 ODR time */
+  IIS2DULPX_11_ODR = 0x12, /* 11 ODR time */
+  IIS2DULPX_15_ODR = 0x13, /* 15 ODR time */
 } iis2dulpx_wake_dur_t;
 
 typedef enum
