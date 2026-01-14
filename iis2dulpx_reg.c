@@ -1240,7 +1240,7 @@ exit:
 int32_t iis2dulpx_mem_bank_get(const stmdev_ctx_t *ctx, iis2dulpx_mem_bank_t *val)
 {
   iis2dulpx_func_cfg_access_t func_cfg_access;
-  int32_t ret;
+  int32_t ret = 0;
 
   if (ctx->priv_data == NULL)
   {
