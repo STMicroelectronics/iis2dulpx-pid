@@ -1812,7 +1812,7 @@ int32_t iis2dulpx_spi_mode_get(const stmdev_ctx_t *ctx, iis2dulpx_spi_mode *val)
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t iis2dulpx_pin_int1_route_set(const stmdev_ctx_t *ctx, const iis2dulpx_pin_int_route_t *val)
+int32_t iis2dulpx_pin_int1_route_set(const stmdev_ctx_t *ctx, const iis2dulpx_pin_int1_route_t *val)
 {
   iis2dulpx_ctrl1_t ctrl1;
   iis2dulpx_ctrl2_t ctrl2;
@@ -1873,7 +1873,7 @@ int32_t iis2dulpx_pin_int1_route_set(const stmdev_ctx_t *ctx, const iis2dulpx_pi
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t iis2dulpx_pin_int1_route_get(const stmdev_ctx_t *ctx, iis2dulpx_pin_int_route_t *val)
+int32_t iis2dulpx_pin_int1_route_get(const stmdev_ctx_t *ctx, iis2dulpx_pin_int1_route_t *val)
 {
   iis2dulpx_ctrl1_t ctrl1;
   iis2dulpx_ctrl2_t ctrl2;
@@ -1986,7 +1986,7 @@ int32_t iis2dulpx_emb_pin_int1_route_get(const stmdev_ctx_t *ctx,
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t iis2dulpx_pin_int2_route_set(const stmdev_ctx_t *ctx, const iis2dulpx_pin_int_route_t *val)
+int32_t iis2dulpx_pin_int2_route_set(const stmdev_ctx_t *ctx, const iis2dulpx_pin_int2_route_t *val)
 {
   iis2dulpx_ctrl3_t ctrl3;
   iis2dulpx_md2_cfg_t md2_cfg;
@@ -2034,7 +2034,7 @@ int32_t iis2dulpx_pin_int2_route_set(const stmdev_ctx_t *ctx, const iis2dulpx_pi
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t iis2dulpx_pin_int2_route_get(const stmdev_ctx_t *ctx, iis2dulpx_pin_int_route_t *val)
+int32_t iis2dulpx_pin_int2_route_get(const stmdev_ctx_t *ctx, iis2dulpx_pin_int2_route_t *val)
 {
   iis2dulpx_ctrl3_t ctrl3;
   iis2dulpx_md2_cfg_t md2_cfg;
