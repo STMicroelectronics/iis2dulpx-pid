@@ -1162,7 +1162,7 @@ int32_t iis2dulpx_i3c_configure_get(const stmdev_ctx_t *ctx, iis2dulpx_i3c_cfg_t
   val->drstdaa_en = i3c_cfg.dis_drstdaa;
   val->asf_on = i3c_cfg.asf_on;
 
-  switch (val->bus_act_sel)
+  switch (i3c_cfg.bus_act_sel)
   {
     case IIS2DULPX_I3C_BUS_AVAIL_TIME_20US:
       val->bus_act_sel = IIS2DULPX_I3C_BUS_AVAIL_TIME_20US;
