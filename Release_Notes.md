@@ -101,7 +101,7 @@ This directory contains the IIS2DULPX component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section6" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section6" aria-hidden="true">
 <label for="collapse-section6" aria-hidden="true">V3.0.0 / 05-Nov-2025</label>
 <div>
 
@@ -111,6 +111,22 @@ This directory contains the IIS2DULPX component drivers.
 - use priv_data to save smartxl_func_cfg_access_t
 - fix ln_pg_read_read/write (clean pg_read bit)
 - Add `sw_reset`, `sw_por`, `reboot`, and `embedded_state_set` APIs
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section7" checked aria-hidden="true">
+<label for="collapse-section7" aria-hidden="true">V4.0.0 / 15-Jan-2026</label>
+<div>
+
+## Main changes
+
+- Fix wake_dur_t enum definition and its usage in wakeup_config_set/get
+- Fix smart_power_cfg_t bitfield size
+- Fix i3c_if_ctrl bitfield definition and i3c_configure_get API
+- Split pin_int struct into pin_int1 and pin_int2
+- Fix return values in mem_bank_get API
 
 ##
 
