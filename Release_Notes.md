@@ -30,56 +30,31 @@ This directory contains the IIS2DULPX component drivers.
 # Update history
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section1" aria-hidden="true">
-<label for="collapse-section1" aria-hidden="true">V1.0.0 / 12-Feb-2025</label>
+<input type="checkbox" id="collapse-section7" checked aria-hidden="true">
+<label for="collapse-section7" aria-hidden="true">V4.0.0 / 15-Jan-2026</label>
 <div>
 
 ## Main changes
 
-### First release
-
-- First official release [ref. DS v1.0]
+- Fix wake_dur_t enum definition and its usage in wakeup_config_set/get
+- Fix smart_power_cfg_t bitfield size
+- Fix i3c_if_ctrl bitfield definition and i3c_configure_get API
+- Split pin_int struct into pin_int1 and pin_int2
+- Fix return values in mem_bank_get API
 
 ##
 
 </div>
-
-<input type="checkbox" id="collapse-section2" aria-hidden="true">
-<label for="collapse-section2" aria-hidden="true">V1.0.1 / 07-Apr-2025</label>
+<input type="checkbox" id="collapse-section6" aria-hidden="true">
+<label for="collapse-section6" aria-hidden="true">V3.0.0 / 05-Nov-2025</label>
 <div>
 
 ## Main changes
 
-- fix drdy event clearing
-- fix RESET case in init_set()
-
-##
-
-</div>
-
-<input type="checkbox" id="collapse-section3" aria-hidden="true">
-<label for="collapse-section3" aria-hidden="true">V1.0.2 / 16-Apr-2025</label>
-<div>
-
-## Main changes
-
-- Fix fifo_mode_set
-
-##
-
-</div>
-
-<input type="checkbox" id="collapse-section4" aria-hidden="true">
-<label for="collapse-section4" aria-hidden="true">V1.1.0 / 07-Jul-2025</label>
-<div>
-
-## Main changes
-
-- Fix driver formatting options
-- Added pointer to private data in stmdev_ctx_t
-- Remove unused status parameter
-- Removed useless reg write in emb_fsm_en_get
-- Fix inact_odr_t enum variants
+- add fsm_wr_ctrl_en_set/get APIs
+- use priv_data to save smartxl_func_cfg_access_t
+- fix ln_pg_read_read/write (clean pg_read bit)
+- Add `sw_reset`, `sw_por`, `reboot`, and `embedded_state_set` APIs
 
 ##
 
@@ -101,36 +76,61 @@ This directory contains the IIS2DULPX component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section6" aria-hidden="true">
-<label for="collapse-section6" aria-hidden="true">V3.0.0 / 05-Nov-2025</label>
+<input type="checkbox" id="collapse-section4" aria-hidden="true">
+<label for="collapse-section4" aria-hidden="true">V1.1.0 / 07-Jul-2025</label>
 <div>
 
 ## Main changes
 
-- add fsm_wr_ctrl_en_set/get APIs
-- use priv_data to save smartxl_func_cfg_access_t
-- fix ln_pg_read_read/write (clean pg_read bit)
-- Add `sw_reset`, `sw_por`, `reboot`, and `embedded_state_set` APIs
+- Fix driver formatting options
+- Added pointer to private data in stmdev_ctx_t
+- Remove unused status parameter
+- Removed useless reg write in emb_fsm_en_get
+- Fix inact_odr_t enum variants
 
 ##
 
 </div>
 
-<input type="checkbox" id="collapse-section7" checked aria-hidden="true">
-<label for="collapse-section7" aria-hidden="true">V4.0.0 / 15-Jan-2026</label>
+<input type="checkbox" id="collapse-section3" aria-hidden="true">
+<label for="collapse-section3" aria-hidden="true">V1.0.2 / 16-Apr-2025</label>
 <div>
 
 ## Main changes
 
-- Fix wake_dur_t enum definition and its usage in wakeup_config_set/get
-- Fix smart_power_cfg_t bitfield size
-- Fix i3c_if_ctrl bitfield definition and i3c_configure_get API
-- Split pin_int struct into pin_int1 and pin_int2
-- Fix return values in mem_bank_get API
+- Fix fifo_mode_set
 
 ##
 
 </div>
+
+<input type="checkbox" id="collapse-section2" aria-hidden="true">
+<label for="collapse-section2" aria-hidden="true">V1.0.1 / 07-Apr-2025</label>
+<div>
+
+## Main changes
+
+- fix drdy event clearing
+- fix RESET case in init_set()
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section1" aria-hidden="true">
+<label for="collapse-section1" aria-hidden="true">V1.0.0 / 12-Feb-2025</label>
+<div>
+
+## Main changes
+
+### First release
+
+- First official release [ref. DS v1.0]
+
+##
+
+</div>
+
 :::
 
 

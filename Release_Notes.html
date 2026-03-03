@@ -48,35 +48,48 @@ license</a></p>
 <section id="update-history" class="col-sm-12 col-lg-8">
 <h1>Update history</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section1" aria-hidden="true">
-<label for="collapse-section1" aria-hidden="true">V1.0.0 /
-12-Feb-2025</label>
+<input type="checkbox" id="collapse-section7" checked aria-hidden="true">
+<label for="collapse-section7" aria-hidden="true">V4.0.0 /
+15-Jan-2026</label>
 <div>
 <h2 id="main-changes">Main changes</h2>
-<h3 id="first-release">First release</h3>
 <ul>
-<li>First official release [ref. DS v1.0]</li>
+<li>Fix wake_dur_t enum definition and its usage in
+wakeup_config_set/get</li>
+<li>Fix smart_power_cfg_t bitfield size</li>
+<li>Fix i3c_if_ctrl bitfield definition and i3c_configure_get API</li>
+<li>Split pin_int struct into pin_int1 and pin_int2</li>
+<li>Fix return values in mem_bank_get API</li>
 </ul>
 <h2 id="section"></h2>
 </div>
-<input type="checkbox" id="collapse-section2" aria-hidden="true">
-<label for="collapse-section2" aria-hidden="true">V1.0.1 /
-07-Apr-2025</label>
+<input type="checkbox" id="collapse-section6" aria-hidden="true">
+<label for="collapse-section6" aria-hidden="true">V3.0.0 /
+05-Nov-2025</label>
 <div>
 <h2 id="main-changes-1">Main changes</h2>
 <ul>
-<li>fix drdy event clearing</li>
-<li>fix RESET case in init_set()</li>
+<li>add fsm_wr_ctrl_en_set/get APIs</li>
+<li>use priv_data to save smartxl_func_cfg_access_t</li>
+<li>fix ln_pg_read_read/write (clean pg_read bit)</li>
+<li>Add <code>sw_reset</code>, <code>sw_por</code>, <code>reboot</code>,
+and <code>embedded_state_set</code> APIs</li>
 </ul>
 <h2 id="section-1"></h2>
 </div>
-<input type="checkbox" id="collapse-section3" aria-hidden="true">
-<label for="collapse-section3" aria-hidden="true">V1.0.2 /
-16-Apr-2025</label>
+<input type="checkbox" id="collapse-section5" aria-hidden="true">
+<label for="collapse-section5" aria-hidden="true">V2.0.0 /
+07-Oct-2025</label>
 <div>
 <h2 id="main-changes-2">Main changes</h2>
 <ul>
-<li>Fix fifo_mode_set</li>
+<li>Added checks before writes to avoid random content from being
+written</li>
+<li>Changed fifo_mode_set API</li>
+<li>Added missing read in stpcnt_mode_get function for
+‘step_counter_in_fifo’ parameter</li>
+<li>Adding CODE_OF_CONDUCT.md and SECURITY.md</li>
+<li>Fix pin_int2_route_get API</li>
 </ul>
 <h2 id="section-2"></h2>
 </div>
@@ -94,48 +107,35 @@ license</a></p>
 </ul>
 <h2 id="section-3"></h2>
 </div>
-<input type="checkbox" id="collapse-section5" aria-hidden="true">
-<label for="collapse-section5" aria-hidden="true">V2.0.0 /
-07-Oct-2025</label>
+<input type="checkbox" id="collapse-section3" aria-hidden="true">
+<label for="collapse-section3" aria-hidden="true">V1.0.2 /
+16-Apr-2025</label>
 <div>
 <h2 id="main-changes-4">Main changes</h2>
 <ul>
-<li>Added checks before writes to avoid random content from being
-written</li>
-<li>Changed fifo_mode_set API</li>
-<li>Added missing read in stpcnt_mode_get function for
-‘step_counter_in_fifo’ parameter</li>
-<li>Adding CODE_OF_CONDUCT.md and SECURITY.md</li>
-<li>Fix pin_int2_route_get API</li>
+<li>Fix fifo_mode_set</li>
 </ul>
 <h2 id="section-4"></h2>
 </div>
-<input type="checkbox" id="collapse-section6" aria-hidden="true">
-<label for="collapse-section6" aria-hidden="true">V3.0.0 /
-05-Nov-2025</label>
+<input type="checkbox" id="collapse-section2" aria-hidden="true">
+<label for="collapse-section2" aria-hidden="true">V1.0.1 /
+07-Apr-2025</label>
 <div>
 <h2 id="main-changes-5">Main changes</h2>
 <ul>
-<li>add fsm_wr_ctrl_en_set/get APIs</li>
-<li>use priv_data to save smartxl_func_cfg_access_t</li>
-<li>fix ln_pg_read_read/write (clean pg_read bit)</li>
-<li>Add <code>sw_reset</code>, <code>sw_por</code>, <code>reboot</code>,
-and <code>embedded_state_set</code> APIs</li>
+<li>fix drdy event clearing</li>
+<li>fix RESET case in init_set()</li>
 </ul>
 <h2 id="section-5"></h2>
 </div>
-<input type="checkbox" id="collapse-section7" checked aria-hidden="true">
-<label for="collapse-section7" aria-hidden="true">V4.0.0 /
-15-Jan-2026</label>
+<input type="checkbox" id="collapse-section1" aria-hidden="true">
+<label for="collapse-section1" aria-hidden="true">V1.0.0 /
+12-Feb-2025</label>
 <div>
 <h2 id="main-changes-6">Main changes</h2>
+<h3 id="first-release">First release</h3>
 <ul>
-<li>Fix wake_dur_t enum definition and its usage in
-wakeup_config_set/get</li>
-<li>Fix smart_power_cfg_t bitfield size</li>
-<li>Fix i3c_if_ctrl bitfield definition and i3c_configure_get API</li>
-<li>Split pin_int struct into pin_int1 and pin_int2</li>
-<li>Fix return values in mem_bank_get API</li>
+<li>First official release [ref. DS v1.0]</li>
 </ul>
 <h2 id="section-6"></h2>
 </div>
