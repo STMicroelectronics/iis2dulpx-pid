@@ -30,7 +30,20 @@ This directory contains the IIS2DULPX component drivers.
 # Update history
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section7" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section8" checked aria-hidden="true">
+<label for="collapse-section8" aria-hidden="true">V4.1.0 / 09-Mar-2026</label>
+<div>
+
+## Main changes
+
+- Move doxygen comment blocks from .c to .h
+- Re-order update history with most updated on top
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section7" aria-hidden="true">
 <label for="collapse-section7" aria-hidden="true">V4.0.0 / 15-Jan-2026</label>
 <div>
 
@@ -45,6 +58,7 @@ This directory contains the IIS2DULPX component drivers.
 ##
 
 </div>
+
 <input type="checkbox" id="collapse-section6" aria-hidden="true">
 <label for="collapse-section6" aria-hidden="true">V3.0.0 / 05-Nov-2025</label>
 <div>
