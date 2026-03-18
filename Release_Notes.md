@@ -30,7 +30,20 @@ This directory contains the IIS2DULPX component drivers.
 # Update history
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section8" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section9" checked aria-hidden="true">
+<label for="collapse-section9" aria-hidden="true">V4.1.1 / 18-Mar-2026</label>
+<div>
+
+## Main changes
+
+- Revert: Split pin_int struct (commit 84f1b49)
+- Change switch cases to use hex values
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section8" aria-hidden="true">
 <label for="collapse-section8" aria-hidden="true">V4.1.0 / 09-Mar-2026</label>
 <div>
 
